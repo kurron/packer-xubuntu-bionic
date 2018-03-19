@@ -1,0 +1,80 @@
+{
+    "description": "Builds an Ubuntu 16.04 Desktop box with various software development tools installed",
+    "min_packer_version": "1.2.1",
+
+    "variables": {
+        "ssh_name": "vagrant",
+        "ssh_pass": "vagrant",
+        "hostname": "xenial-xubuntu",
+        "version": "5.2.8",
+        "comment": "Update to VirtualBox 5.2.8",
+        "home": "{{env `HOME`}}",
+        "cloud_user": "{{env `VAGRANT_CLOUD_ACCOUNT`}}",
+        "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}"
+    },
+
+    "builders": [{
+        "boot_command" : [],
+        "boot_wait": "10s",
+        "floppy_files": [],
+        "format": "ova",
+        "guest_additions_mode": "upload",
+        "guest_additions_path" : "VBoxGuestAdditions_{{.Version}}.iso",
+        "headless": false,
+        "http_directory" : "web-server",
+        "http_port_max" : 9000,
+        "http_port_min" : 8000,
+        "output_directory": "output-virtualbox-iso",
+        "shutdown_command": "echo {{user `ssh_pass`}} | sudo -S shutdown -P now",
+        "source_path": "{{ user `home` }}/.vagrant.d/boxes/xenial-server-bare/0/virtualbox/box.ovf",
+        "ssh_password": "{{user `ssh_pass`}}",
+        "ssh_port": 22,
+        "ssh_username": "{{user `ssh_name`}}",
+        "ssh_wait_timeout": "20m",
+        "type": "virtualbox-ovf",
+        "vboxmanage": [
+		        ["modifyvm", "{{.Name}}", "--vram", "32"],
+		        ["modifyvm", "{{.Name}}", "--memory", "2048"],
+		        ["modifyvm", "{{.Name}}", "--cpus", "1"],
+		        ["modifyvm", "{{.Name}}", "--audio", "none"],
+		        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional"]
+	      ],
+        "vboxmanage_post": [],
+        "vm_name": "xenial-xubuntu"
+    }],
+    "provisioners": [
+        {
+            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "type": "shell",
+            "scripts": ["scripts/install-ansible.sh"]
+        },
+        {
+            "extra_arguments" : ["--verbose"],
+            "galaxy_file"     : "ansible/files/requirements.yml",
+            "playbook_dir"    : "ansible",
+            "playbook_file"   : "ansible/playbook.yml",
+            "type"            : "ansible-local"
+       },
+       {
+           "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+           "type": "shell",
+           "scripts": ["scripts/install-virtualbox.sh","scripts/zero-out-disk.sh"]
+       }
+    ],
+    "post-processors": [
+        [{
+             "compression_level": 9,
+             "include": [],
+             "keep_input_artifact": false,
+             "output": "vagrant/xenial-xubuntu.box",
+             "type": "vagrant"
+        },
+        {
+            "access_token": "{{user `cloud_token`}}",
+            "box_tag": "{{user `cloud_user`}}/xenial-xubuntu",
+            "type": "vagrant-cloud",
+            "version": "{{user `version`}}",
+            "version_description": "{{user `comment`}}"
+        }]
+    ]
+}

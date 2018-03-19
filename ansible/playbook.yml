@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  gather_facts: yes
+
+  pre_tasks:
+      - name: Install Desktop
+        package:
+            name: "{{ item }}"
+            state: present
+        items:
+            - "xubuntu-core"
+            - "firefox"
+            - "chromium-browser"
+            - "evince"
+        become: yes
+
+  roles:
+      - kurron.atlassian
+      - kurron.aws
+      - kurron.docker-host
+      - { role: kurron.hashicorp, hashicorp_vagrant_install: false }
+      - { role: kurron.javascript-developer, javascript_webstorm_install: false }
+      - { role: kurron.jvm-developer, jvm_android_studio_install: false, jvm_visualvm_install: false }
+      - kurron.jvpn
+      - { role: kurron.operations, operations_loggly_install: false, operations_datadog_install: false }
+      - kurron.python-developer
+      - kurron.software-developer
+      - { role: kurron.sql-developer, sql_datagrip_install: false }
+

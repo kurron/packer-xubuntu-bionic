@@ -1,29 +1,38 @@
 {
-    "description": "Builds a Xubuntu 86.04 desktop box with various software development tools installed",
+    "description": "Builds a Xubuntu 18.04 desktop box with various software development tools installed",
     "min_packer_version": "1.2.1",
-
     "variables": {
         "ssh_name": "vagrant",
         "ssh_pass": "vagrant"
     },
-
-    "builders": [{
-        "type": "virtualbox-ovf",
-        "source_path": "bionic-beaver.ova",
-        "format": "ova",
-        "ssh_username": "{{user `ssh_name`}}",
-        "ssh_password": "{{user `ssh_pass`}}",
-        "shutdown_command": "echo {{user `ssh_pass`}} | sudo -S shutdown -P now"
-    }],
-    "provisioners": [],
+    "builders": [
+        {
+            "type": "virtualbox-ovf",
+            "source_path": "bionic-beaver.ova",
+            "format": "ova",
+            "ssh_username": "{{user `ssh_name`}}",
+            "ssh_password": "{{user `ssh_pass`}}",
+            "shutdown_command": "echo {{user `ssh_pass`}} | sudo --stdin shutdown --poweroff now",
+            "guest_additions_mode": "disable"
+        }
+    ],
+    "provisioners": [
+        {
+            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo --preserve-env --stdin sh '{{ .Path }}'",
+            "type": "shell",
+            "scripts": ["scripts/install-virtualbox.sh","scripts/clear-apt-cache.sh","scripts/zero-out-disk.sh"]
+        }
+    ],
     "post-processors": [
-        [{
-             "compression_level": 9,
-             "include": [],
-             "keep_input_artifact": false,
-             "output": "vagrant/bionic-xubuntu.box",
-             "vagrantfile_template": "",
-             "type": "vagrant"
-        }]
+        [
+            {
+                "compression_level": 9,
+                "include": [],
+                "keep_input_artifact": false,
+                "output": "vagrant/bionic-xubuntu.box",
+                "vagrantfile_template": "",
+                "type": "vagrant"
+            }
+        ]
     ]
 }

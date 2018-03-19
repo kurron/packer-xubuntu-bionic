@@ -1,15 +1,13 @@
-#!/bin/bash -x
+#!/bin/env bash -x
 
-VBOX_VERSION=$(cat /home/vagrant/.vbox_version)
-VBOX_ISO=VBoxGuestAdditions_$VBOX_VERSION.iso
-mount -o loop ${VBOX_ISO} /mnt
-/mnt/VBoxLinuxAdditions.run
-umount /mnt
+# Packer runs this via sudo
 
-# Remove the guest additions ISO so it doesn't take up space in the finished base box:
-rm -rf /home/vagrant/${VBOX_ISO}
+# installing guest additions has always been painful.  With the release of Bionic, it will be baked into the kernel
+# so we won't have to do this.
+export DEBIAN_FRONTEND=noninteractive
 
-# mount as a CD-ROM device
-#mount /dev/cdrom /mnt
-#/mnt/VBoxLinuxAdditions.run
-#umount /mnt
+# sometimes the background update process runs and captures the lock
+until apt-get -y update; do echo "Waiting for apt lock"; sleep 5; done
+
+# install the guest additions
+apt-get install -y linux-headers-virtual virtualbox-guest-dkms

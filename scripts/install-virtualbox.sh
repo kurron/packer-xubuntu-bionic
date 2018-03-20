@@ -10,4 +10,4 @@ export DEBIAN_FRONTEND=noninteractive
 until apt-get -y update; do echo "Waiting for apt lock"; sleep 5; done
 
 # install the guest additions
-apt-get install -y linux-headers-virtual virtualbox-guest-dkms
+apt-get install -y virtualbox-guest-dkms virtualbox-guest-x11

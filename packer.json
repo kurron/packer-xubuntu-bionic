@@ -20,7 +20,12 @@
         {
             "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo --preserve-env --stdin sh '{{ .Path }}'",
             "type": "shell",
-            "scripts": ["scripts/install-virtualbox.sh","scripts/clear-apt-cache.sh","scripts/zero-out-disk.sh"]
+            "scripts": ["scripts/install-desktop.sh"]
+        },
+        {
+            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo --preserve-env --stdin sh '{{ .Path }}'",
+            "type": "shell",
+            "scripts": ["scripts/clear-apt-cache.sh","scripts/zero-out-disk.sh"]
         }
     ],
     "post-processors": [

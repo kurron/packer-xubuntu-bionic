@@ -1,11 +1,22 @@
 {
     "description": "Builds a Xubuntu 18.04 desktop box with various software development tools installed",
-    "min_packer_version": "1.2.1",
+    "min_packer_version": "1.2.2",
     "variables": {
         "ssh_name": "vagrant",
-        "ssh_pass": "vagrant"
+        "ssh_pass": "vagrant",
+        "vmware_box": "/home/rkurr/vmware/Ubuntu 64-bit/Ubuntu 64-bit.vmx"
     },
     "builders": [
+        {
+            "type": "vmware-vmx",
+            "source_path": "{{user `vmware_box`}}",
+            "ssh_username": "root",
+            "ssh_password": "root",
+            "shutdown_command": "shutdown --poweroff now",
+            "output_directory": "VMware",
+            "tools_upload_flavor": "linux",
+            "tools_upload_path": "/mnt/{{.Flavor}}.iso"
+        },
         {
             "type": "virtualbox-ovf",
             "source_path": "bionic-beaver.ova",
@@ -33,7 +44,7 @@
             {
                 "compression_level": 9,
                 "include": [],
-                "keep_input_artifact": false,
+                "keep_input_artifact": true,
                 "output": "vagrant/bionic-xubuntu.box",
                 "vagrantfile_template": "",
                 "type": "vagrant"

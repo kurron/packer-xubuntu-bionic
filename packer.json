@@ -1,54 +1,49 @@
 {
-    "description": "Builds a Xubuntu 18.04 desktop box with various software development tools installed",
+    "description": "Builds a Xubuntu 86.04 desktop box with various software development tools installed",
     "min_packer_version": "1.2.2",
+
     "variables": {
+        "hostname": "bionic-xubuntu",
         "ssh_name": "vagrant",
         "ssh_pass": "vagrant",
-        "vmware_box": "/home/rkurr/vmware/Ubuntu 64-bit/Ubuntu 64-bit.vmx"
+        "virtualbox_appliance": "bionic-beaver.ova"
     },
-    "builders": [
-        {
-            "type": "vmware-vmx",
-            "source_path": "{{user `vmware_box`}}",
-            "ssh_username": "root",
-            "ssh_password": "root",
-            "shutdown_command": "shutdown --poweroff now",
-            "output_directory": "VMware",
-            "tools_upload_flavor": "linux",
-            "tools_upload_path": "/mnt/{{.Flavor}}.iso"
-        },
-        {
-            "type": "virtualbox-ovf",
-            "source_path": "bionic-beaver.ova",
-            "format": "ova",
-            "ssh_username": "{{user `ssh_name`}}",
-            "ssh_password": "{{user `ssh_pass`}}",
-            "shutdown_command": "echo {{user `ssh_pass`}} | sudo --stdin shutdown --poweroff now",
-            "guest_additions_mode": "disable"
-        }
-    ],
+
+    "builders": [{
+        "type": "virtualbox-ovf",
+        "source_path": "{{user `virtualbox_appliance`}}",
+        "ssh_username": "{{user `ssh_name`}}",
+        "ssh_password": "{{user `ssh_pass`}}",
+
+        "boot_wait": "30s",
+        "format": "ova",
+        "guest_additions_mode": "disable",
+        "headless": false,
+        "keep_registered": false,
+        "shutdown_command": "sudo shutdown --poweroff now",
+        "shutdown_timeout": "2m",
+        "skip_export": false,
+        "output_directory": "output-virtualbox-ovf",
+        "vboxmanage": [
+		        ["modifyvm", "{{.Name}}", "--vram", "32"],
+		        ["modifyvm", "{{.Name}}", "--memory", "2048"],
+		        ["modifyvm", "{{.Name}}", "--cpus", "1"]
+	      ],
+          "vm_name": "packer-bionic-xubuntu"
+    }],
     "provisioners": [
         {
-            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo --preserve-env --stdin sh '{{ .Path }}'",
+            "execute_command": "sudo --preserve-env sh '{{ .Path }}'",
             "type": "shell",
-            "scripts": ["scripts/install-desktop.sh"]
-        },
-        {
-            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo --preserve-env --stdin sh '{{ .Path }}'",
-            "type": "shell",
-            "scripts": ["scripts/clear-apt-cache.sh","scripts/zero-out-disk.sh"]
+            "scripts": ["scripts/install-desktop.sh","scripts/clear-apt-cache.sh","scripts/zero-out-disk.sh"]
         }
     ],
     "post-processors": [
-        [
-            {
-                "compression_level": 9,
-                "include": [],
-                "keep_input_artifact": true,
-                "output": "vagrant/bionic-xubuntu.box",
-                "vagrantfile_template": "",
-                "type": "vagrant"
-            }
-        ]
+        [{
+             "compression_level": 9,
+             "keep_input_artifact": false,
+             "output": "vagrant/bionic-xubuntu.box",
+             "type": "vagrant"
+        }]
     ]
 }

@@ -1,22 +1,24 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.require_version ">= 2.0.1"
+Vagrant.require_version ">= 2.1.1"
 
 Vagrant.configure(2) do |config|
+  config.vm.box = "bionic-xubuntu"
   config.ssh.username = "vagrant"
   config.ssh.password = "vagrant"
 
   config.vm.provider "virtualbox" do |v|
+      v.name = "bionic-xubuntu-packer-test"
       v.gui = true
+      v.memory = 4096
+      v.cpus = 2
   end
 
-  config.vm.define "bionic-xubuntu" do |server|
-      server.vm.provider "virtualbox" do |v|
-          v.gui = true
-          v.name = "packer.bionic-xubuntu"
-      end
-      server.vm.box = "bionic-xubuntu"
-  end
 
+  config.vm.provider "vmware_desktop" do |v|
+      v.gui = true
+      v.memory = 4096
+      v.cpus = 2
+  end
 end

@@ -14,6 +14,9 @@ then
     cd /tmp && tar zxvf VMwareTools-10.2.5-8068393.tar.gz && cd vmware-tools-distrib && sudo ./vmware-install.pl -d default
     sudo umount /mnt
     rm -rf /home/vagrant/${ISO}
+    until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done
+    sudo apt-get update
+    sudo apt-get --yes install open-vm-tools open-vm-tools-desktop
 else
     echo "Installing VirtualBox Guest Additions"
     until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done

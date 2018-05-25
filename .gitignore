@@ -5,4 +5,5 @@ vagrant
 .vagrant
 *.ova
 *.ovf
+*.vmx
 packer-log.txt

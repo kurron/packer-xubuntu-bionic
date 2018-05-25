@@ -1,8 +1,14 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
 
-until sudo apt -y update; do echo "Waiting for apt lock"; sleep 5; done
+# there are numerous ways to install Ansible but let's use the package manager
+echo "Installing Ansible via package manager..."
 
-sudo apt install -y python-pip python-dev build-essential libssl-dev libffi-dev apt-transport-https
-sudo pip install --upgrade pip
-sudo pip install --upgrade ansible
-sudo pip install --upgrade setuptools
+until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done
+
+sudo apt-get update
+sudo apt-get --yes install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get --yes install ansible
+
+ansible --version

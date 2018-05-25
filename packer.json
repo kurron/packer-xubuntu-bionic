@@ -6,8 +6,9 @@
         "ssh_name"            : "vagrant",
         "ssh_pass"            : "vagrant",
         "virtualbox_appliance": "bionic-beaver.ova",
+        "vmware_appliance"    : "bionic-beaver.vmx",
         "comment"             : "Ubuntu 18.04 Bionic Beaver support",
-        "cloud_user"          : "{{env `VAGRANT_CLOUD_ACCOUNT`}}XXXXX",
+        "cloud_user"          : "{{env `VAGRANT_CLOUD_ACCOUNT`}}",
         "cloud_token"         : "{{env `VAGRANT_CLOUD_TOKEN`}}"
     },
 
@@ -27,12 +28,23 @@
         "shutdown_timeout"     : "2m",
         "skip_export"          : false,
         "output_directory"     : "output-virtualbox-ovf",
-        "vboxmanage": [
-		        ["modifyvm", "{{.Name}}", "--vram", "32"],
-		        ["modifyvm", "{{.Name}}", "--memory", "2048"],
-		        ["modifyvm", "{{.Name}}", "--cpus", "1"]
-	      ],
-        "vm_name"             : "packer-bionic-xubuntu"
+        "vm_name"              : "packer-bionic-xubuntu"
+    },
+    {
+        "type"        : "vmware-vmx",
+        "source_path" : "{{user `vmware_appliance`}}",
+        "ssh_username": "{{user `ssh_name`}}",
+        "ssh_password": "{{user `ssh_pass`}}",
+
+        "boot_wait"            : "30s",
+        "disable_vnc"          : true,
+        "headless"             : false,
+        "output_directory"     : "output-vmware-vmx",
+        "shutdown_command"     : "sudo shutdown --poweroff now",
+        "shutdown_timeout"     : "2m",
+        "skip_compaction"      : false,
+        "tools_upload_flavor"  : "linux",
+        "vm_name"              : "packer-bionic-xubuntu"
     }],
     "provisioners": [
         {
@@ -43,7 +55,7 @@
         {
             "type"            : "shell",
             "environment_vars": ["DEBIAN_FRONTEND=noninteractive"],
-            "scripts"         : ["scripts/install-guest-additions.sh","scripts/prepare-for-compression.sh"]
+            "scripts"         : ["scripts/install-hypervisor-tools.sh","scripts/prepare-for-compression.sh"]
         }
     ],
     "post-processors": [

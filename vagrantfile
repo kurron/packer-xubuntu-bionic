@@ -8,17 +8,18 @@ Vagrant.configure(2) do |config|
   config.ssh.username = "vagrant"
   config.ssh.password = "vagrant"
 
-  config.vm.provider "virtualbox" do |v|
-      v.name = "bionic-xubuntu-packer-test"
-      v.gui = true
-      v.memory = 4096
-      v.cpus = 2
+  config.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.name = "bionic-xubuntu-packer-test"
+      virtualbox.gui = true
+      virtualbox.memory = 4096
+      virtualbox.cpus = 2
   end
 
 
-  config.vm.provider "vmware_desktop" do |v|
-      v.gui = true
-      v.memory = 4096
-      v.cpus = 2
+  config.vm.provider "vmware_desktop" do |vmware|
+      vmware.name = "bionic-xubuntu-packer-test"
+      vmware.gui = true
+      vmware.memory = 4096
+      vmware.cpus = 2
   end
 end

@@ -14,9 +14,9 @@ PACKER_FILE=${1:-packer.json}
 
 packer validate ${PACKER_FILE}
 
-#packer build --parallel=false --force ${PACKER_FILE}
+packer build --parallel=false --force ${PACKER_FILE}
 
-packer build --force --only vmware-vmx ${PACKER_FILE}
+#packer build --force --only vmware-vmx ${PACKER_FILE}
 vagrant box add --clean --force --name bionic-xubuntu --provider vmware_desktop vagrant/xubuntu-bionic-vmware.box
 
 #packer build --force --only virtualbox-ovf ${PACKER_FILE}

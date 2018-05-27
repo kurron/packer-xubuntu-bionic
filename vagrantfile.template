@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 2.1.1"
+
+Vagrant.configure(2) do |config|
+    config.vm.box = "kurron/bionic-xubuntu"
+    config.vm.boot_timeout = 300
+    config.vm.box_check_update = true
+    config.vm.graceful_halt_timeout = 60
+    config.vm.post_up_message = "Login credentials are vagrant/vagrant"
+    config.vm.synced_folder ".", "/vagrant", disabled: false
+
+    config.ssh.username = "vagrant"
+    config.ssh.password = "vagrant"
+
+    config.vm.provider "virtualbox" do |virtualbox|
+        virtualbox.name = "bionic-xubuntu-packer-test"
+        virtualbox.gui = true
+        virtualbox.memory = 4096
+        virtualbox.cpus = 2
+
+        # change the network card hardware for better performance
+        virtualbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        virtualbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+
+        # suggested fix for slow network performance
+        # see https://github.com/mitchellh/vagrant/issues/1807
+        virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        virtualbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+
+        virtualbox.customize ["modifyvm", :id, "--vram", "24"]
+        virtualbox.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+        virtualbox.customize ["modifyvm", :id, "--hwvirtex", "on"]
+        virtualbox.customize ["modifyvm", :id, "--nestedpaging", "on"]
+        virtualbox.customize ["modifyvm", :id, "--vtxvpid", "on"]
+        virtualbox.customize ["modifyvm", :id, "--largepages", "on"]
+        virtualbox.customize ["modifyvm", :id, "--acpi", "on"]
+    end
+
+    config.vm.provider "vmware_desktop" do |vmware|
+        vmware.name = "bionic-xubuntu-packer-test"
+        vmware.gui = true
+        vmware.memory = 4096
+        vmware.cpus = 2
+    end
+end

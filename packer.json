@@ -7,7 +7,7 @@
         "ssh_pass"            : "vagrant",
         "virtualbox_appliance": "bionic-beaver.ova",
         "vmware_appliance"    : "bionic-beaver.vmx",
-        "comment"             : "Ubuntu 18.04 Bionic Beaver support",
+        "comment"             : "Ubuntu 18.04 Bionic Beaver and VMWare support",
         "cloud_user"          : "{{env `VAGRANT_CLOUD_ACCOUNT`}}",
         "cloud_token"         : "{{env `VAGRANT_CLOUD_TOKEN`}}"
     },
@@ -53,6 +53,12 @@
             "script"          : "scripts/install-ansible.sh"
         },
         {
+            "type"            : "ansible-local",
+            "playbook_file"   : "ansible/playbook.yml",
+            "galaxy_file"     : "ansible/requirements.yml",
+            "extra_arguments" : ["--verbose"]
+        },
+        {
             "type"            : "shell",
             "environment_vars": ["DEBIAN_FRONTEND=noninteractive"],
             "scripts"         : ["scripts/install-hypervisor-tools.sh","scripts/prepare-for-compression.sh"]
@@ -63,15 +69,8 @@
             {
                 "compression_level"  : 9,
                 "keep_input_artifact": false,
-                "output"             : "vagrant/bionic-xubuntu.box",
+                "output"             : "vagrant/xubuntu-bionic-{{.Provider}}.box",
                 "type"               : "vagrant"
-            },
-            {
-                 "access_token"       : "{{user `cloud_token`}}",
-                 "box_tag"            : "{{user `cloud_user`}}/bionic-xubuntu",
-                 "type"               : "vagrant-cloud",
-                 "version"            : "{{isotime \"2006.01.0203\"}}",
-                 "version_description": "{{user `comment`}}"
             }
         ]
     ]

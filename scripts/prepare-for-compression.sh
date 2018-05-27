@@ -3,6 +3,9 @@
 # sometimes the background update process runs and captures the lock
 until sudo apt-get -y update; do echo "Waiting for apt lock"; sleep 5; done
 
+echo 'Deleting downloaded files...'
+sudo rm -f /home/vagrant/Downloads/*
+
 echo 'Clearing APT cache...'
 sudo apt-get clean
 

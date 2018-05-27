@@ -5,25 +5,21 @@
   pre_tasks:
       - name: Install Desktop
         package:
-            name: "{{ item }}"
+            name: "{{item}}"
             state: present
-        items:
-            - "xubuntu-core"
+        loop:
             - "firefox"
-            - "chromium-browser"
             - "evince"
         become: yes
 
   roles:
-      - kurron.atlassian
       - kurron.aws
       - kurron.docker-host
-      - { role: kurron.hashicorp, hashicorp_vagrant_install: false }
-      - { role: kurron.javascript-developer, javascript_webstorm_install: false }
-      - { role: kurron.jvm-developer, jvm_android_studio_install: false, jvm_visualvm_install: false }
-      - kurron.jvpn
+      - kurron.hashicorp
+      - kurron.javascript-developer
+      - role: kurron.jvm-developer
       - { role: kurron.operations, operations_loggly_install: false, operations_datadog_install: false }
       - kurron.python-developer
-      - kurron.software-developer
-      - { role: kurron.sql-developer, sql_datagrip_install: false }
+      - { role: kurron.software-developer, developer_atom_install: false, developer_visual_studio_install: false }
+      - { role: kurron.sql-developer, sql_datagrip_install: false  }
 

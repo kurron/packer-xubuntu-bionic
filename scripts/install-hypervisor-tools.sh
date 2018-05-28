@@ -16,12 +16,13 @@ then
     sudo rm -rf /home/vagrant/${ISO}
     until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done
     sudo apt-get update
+    until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done
     sudo apt-get --yes install open-vm-tools open-vm-tools-desktop
 else
     echo "Installing VirtualBox Guest Additions"
     until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done
-
     sudo apt-get update
+    until sudo apt-get --yes update; do echo "Waiting for apt lock"; sleep 5; done
     sudo apt-get --yes install gcc make perl
 
     VBOX_VERSION=$(cat /home/vagrant/.vbox_version)

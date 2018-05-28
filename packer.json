@@ -77,7 +77,7 @@
                  "access_token"       : "{{user `cloud_token`}}",
                  "box_tag"            : "{{user `cloud_user`}}/bionic-xubuntu",
                  "type"               : "vagrant-cloud",
-                 "version"            : "{{isotime \"2006.01.0203\"}}",
+                 "version"            : "{{isotime \"2006.01.0215\"}}",
                  "version_description": "{{user `comment`}}"
             }
         ]

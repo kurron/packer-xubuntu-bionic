@@ -7,7 +7,7 @@
         "ssh_pass"            : "vagrant",
         "virtualbox_appliance": "bionic-beaver.ova",
         "vmware_appliance"    : "bionic-beaver.vmx",
-        "comment"             : "Ubuntu 18.04 Bionic Beaver and VMWare support",
+        "comment"             : "Ubuntu 18.04 Bionic Beaver with VirtualBox and VMWare support.  See [README](https://github.com/kurron/jvm-development-environment) for launch instructions.",
         "cloud_user"          : "{{env `VAGRANT_CLOUD_ACCOUNT`}}",
         "cloud_token"         : "{{env `VAGRANT_CLOUD_TOKEN`}}"
     },

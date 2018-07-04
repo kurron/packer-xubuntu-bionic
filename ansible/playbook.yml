@@ -3,7 +3,7 @@
   gather_facts: yes
 
   pre_tasks:
-      - name: Install Desktop
+      - name: Install Useful Desktop Packages
         package:
             name: "{{item}}"
             state: present
@@ -20,6 +20,8 @@
       - role: kurron.jvm-developer
       - { role: kurron.operations, operations_loggly_install: false, operations_datadog_install: false }
       - kurron.python-developer
-      - { role: kurron.software-developer, developer_atom_install: false, developer_visual_studio_install: false }
+      - { role: kurron.software-developer, developer_atom_install: false,
+                                           developer_visual_studio_install: false,
+                                           developer_compass_install: false }
       - { role: kurron.sql-developer, sql_datagrip_install: false  }
 

@@ -16,8 +16,8 @@
       - kurron.aws
       - kurron.docker-host
       - kurron.hashicorp
-      - kurron.javascript-developer
-      - role: kurron.jvm-developer
+      - { role: kurron.javascript-developer, javascript_webstorm_install: false }
+      - kurron.jvm-developer
       - { role: kurron.operations, operations_loggly_install: false, operations_datadog_install: false }
       - kurron.python-developer
       - { role: kurron.software-developer, developer_atom_install: false,

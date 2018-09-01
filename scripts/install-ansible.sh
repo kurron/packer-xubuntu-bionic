@@ -11,7 +11,7 @@ echo "Installing Ansible via package manager..."
 sudo systemctl stop apt-daily.timer
 
 # I've had issues with something grabbing the APT lock so we check at each step now
-sleep 1m
+sleep 5m
 
 wait_for_apt_lock
 sudo apt-get update

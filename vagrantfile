@@ -21,5 +21,6 @@ Vagrant.configure(2) do |config|
       vmware.gui = true
       vmware.memory = 4096
       vmware.cpus = 2
+      vmware.port_forward_network_pause = 60
   end
 end

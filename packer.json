@@ -70,15 +70,7 @@
                 "compression_level"  : 9,
                 "keep_input_artifact": false,
                 "output"             : "vagrant/xubuntu-bionic-{{.Provider}}.box",
-                "type"               : "vagrant",
-                "vagrantfile_template": "vagrantfile.template"
-            },
-            {
-                 "access_token"       : "{{user `cloud_token`}}",
-                 "box_tag"            : "{{user `cloud_user`}}/bionic-xubuntu",
-                 "type"               : "vagrant-cloud",
-                 "version"            : "{{isotime \"2006.01.0215\"}}",
-                 "version_description": "{{user `comment`}}"
+                "type"               : "vagrant"
             }
         ]
     ]

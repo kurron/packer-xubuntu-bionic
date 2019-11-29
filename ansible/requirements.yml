@@ -1,9 +1,3 @@
 - src: kurron.aws
 - src: kurron.docker-host
 - src: kurron.hashicorp
-- src: kurron.javascript-developer
-- src: kurron.jvm-developer
-- src: kurron.operations
-- src: kurron.python-developer
-- src: kurron.software-developer
-- src: kurron.sql-developer

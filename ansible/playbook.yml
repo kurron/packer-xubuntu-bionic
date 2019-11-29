@@ -8,20 +8,108 @@
             name: "{{item}}"
             state: present
         loop:
+            - "python-apt"
             - "firefox"
+            - "chromium-browser"
             - "evince"
+            - "tree"
+            - "baobab"
         become: yes
+
+      - name: Install Visual Studio Code
+        snap:
+            name: code
+            classic: yes
+            state: present
+        become: yes
+
+      - name: Download SDKMAN!
+        get_url:
+            url: "https://get.sdkman.io"
+            dest: "{{ansible_user_dir}}/{{base_download_directory}}/sdkman-install.sh"
+            mode: 0554
+        become: no
+
+      - name: Run SDKMAN! Installer
+        shell: "{{ansible_user_dir}}/{{base_download_directory}}/sdkman-install.sh"
+        args:
+            creates: "{{ansible_user_dir}}/.sdkman/etc/config"
+        become: no
+
+      - name: Point Non-Interactive Environments To The JDK
+        lineinfile:
+            dest: /etc/environment
+            line: '{{item}}'
+            state: present
+        loop:
+            - "JAVA_HOME=${HOME}/.sdkman/candidates/java/current"
+            - "JDK_HOME=${HOME}/.sdkman/candidates/java/current"
+        become: yes
+
+      - name: Point Interactive Environments To The JDK
+        lineinfile:
+            dest: /etc/profile.d/default-jdk-environment.sh
+            line: '{{item}}'
+            owner: "{{ansible_user_uid}}"
+            group: "{{ansible_user_gid}}"
+            mode: 0555
+            state: present
+            create: yes
+        loop:
+            - "export JAVA_HOME=${HOME}/.sdkman/candidates/java/current"
+            - "export JDK_HOME=${HOME}/.sdkman/candidates/java/current"
+            - "export JAVA_CMD=${HOME}/.sdkman/candidates/java/current/bin/java"
+        become: yes
+
+      - name: Create bin directory
+        file:
+            name: "{{ansible_user_dir}}/bin"
+            state: directory
+            owner: "{{ansible_user_uid}}"
+            group: "{{ansible_user_gid}}"
+            mode: 0755
+        become: no
+
+      - name: Create Snap convenience scripts
+        lineinfile:
+            dest: "{{ansible_user_dir}}/bin/{{ item.name }}"
+            line: "{{ item.command }}"
+            owner: "{{ansible_user_uid}}"
+            group: "{{ansible_user_gid}}"
+            mode: 0775
+            state: present
+            create: yes
+        become: no
+        with_items:
+            - { name: 'install-clion.sh', command: 'sudo snap install clion --classic' }
+            - { name: 'install-data-grip.sh', command: 'sudo snap install datagrip --classic' }
+            - { name: 'install-go-land.sh', command: 'sudo snap install goland --classic' }
+            - { name: 'install-intellij-idea-community.sh', command: 'sudo snap install intellij-idea-community --classic' }
+            - { name: 'install-intellij-idea-educational.sh', command: 'sudo snap install intellij-idea-educational --classic' }
+            - { name: 'install-intellij-idea-ultimate.sh', command: 'sudo snap install intellij-idea-ultimate --classic' }
+            - { name: 'install-php-storm.sh', command: 'sudo snap install phpstorm --classic' }
+            - { name: 'install-pycharm-community.sh', command: 'sudo snap install pycharm-community --classic' }
+            - { name: 'install-pycharm-educational.sh', command: 'sudo snap install pycharm-educational --classic' }
+            - { name: 'install-pycharm-professional.sh', command: 'sudo snap install pycharm-professional --classic' }
+            - { name: 'install-rider.sh', command: 'sudo snap install rider --classic' }
+            - { name: 'install-rubymine.sh', command: 'sudo snap install rubymine --classic' }
+            - { name: 'install-webstorm.sh', command: 'sudo snap install webstorm --classic' }
+            - { name: 'install-atom.sh', command: 'sudo snap install atom --classic' }
+            - { name: 'install-android-studio.sh', command: 'sudo snap install android-studio --classic' }
+            - { name: 'install-eclipse.sh', command: 'sudo snap install eclipse --classic' }
+            - { name: 'install-postman.sh', command: 'sudo snap install postman' }
+            - { name: 'install-kubectl.sh', command: 'sudo snap install kubectl --classic' }
+            - { name: 'install-powershell.sh', command: 'sudo snap install powershell --classic' }
+            - { name: 'install-ffmpeg.sh', command: 'sudo snap install ffmpeg' }
+            - { name: 'install-gradle.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install gradle' }
+            - { name: 'install-groovy.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install groovy' }
+            - { name: 'install-java.sh', command: 'echo try "sdk list java" to list available JDKs' }
+            - { name: 'install-kotlin.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install kotlin' }
+            - { name: 'install-maven.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install maven' }
+            - { name: 'install-visual-vm.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install visualvm' }
 
   roles:
       - kurron.aws
       - kurron.docker-host
       - kurron.hashicorp
-      - { role: kurron.javascript-developer, javascript_webstorm_install: false }
-      - kurron.jvm-developer
-      - { role: kurron.operations, operations_loggly_install: false, operations_datadog_install: false }
-      - kurron.python-developer
-      - { role: kurron.software-developer, developer_atom_install: false,
-                                           developer_visual_studio_install: false,
-                                           developer_compass_install: false }
-      - { role: kurron.sql-developer, sql_datagrip_install: false  }
 

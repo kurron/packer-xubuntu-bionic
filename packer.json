@@ -1,6 +1,6 @@
 {
     "description": "Builds a Xubuntu 18.04 desktop box with various software development tools installed",
-    "min_packer_version": "1.4.1",
+    "min_packer_version": "1.4.3",
 
     "variables": {
         "ssh_name"            : "vagrant",
@@ -13,11 +13,10 @@
     },
 
     "builders": [{
-        "type"        : "virtualbox-ovf",
-        "source_path" : "{{user `virtualbox_appliance`}}",
-        "ssh_username": "{{user `ssh_name`}}",
-        "ssh_password": "{{user `ssh_pass`}}",
-
+        "type"                 : "virtualbox-ovf",
+        "source_path"          : "{{user `virtualbox_appliance`}}",
+        "ssh_username"         : "{{user `ssh_name`}}",
+        "ssh_password"         : "{{user `ssh_pass`}}",
         "boot_wait"            : "30s",
         "format"               : "ova",
         "guest_additions_mode" : "upload",
@@ -28,14 +27,18 @@
         "shutdown_timeout"     : "2m",
         "skip_export"          : false,
         "output_directory"     : "output-virtualbox-ovf",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--vram", "32"],
+            ["modifyvm", "{{.Name}}", "--memory", "2048"],
+            ["modifyvm", "{{.Name}}", "--cpus", "1"]
+        ],
         "vm_name"              : "packer-bionic-xubuntu"
     },
     {
-        "type"        : "vmware-vmx",
-        "source_path" : "{{user `vmware_appliance`}}",
-        "ssh_username": "{{user `ssh_name`}}",
-        "ssh_password": "{{user `ssh_pass`}}",
-
+        "type"                 : "vmware-vmx",
+        "source_path"          : "{{user `vmware_appliance`}}",
+        "ssh_username"         : "{{user `ssh_name`}}",
+        "ssh_password"         : "{{user `ssh_pass`}}",
         "boot_wait"            : "30s",
         "disable_vnc"          : true,
         "headless"             : false,
@@ -45,8 +48,9 @@
         "skip_compaction"      : false,
         "tools_upload_flavor"  : "linux",
         "vm_name"              : "packer-bionic-xubuntu"
-    }],
-    "provisioners": [
+    }
+    ],
+    "provisioners": [        
         {
             "type"            : "shell",
             "environment_vars": ["DEBIAN_FRONTEND=noninteractive"],

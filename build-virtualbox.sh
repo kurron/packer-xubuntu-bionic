@@ -17,9 +17,6 @@ sleep ${SLEEP}
 export PACKER_LOG=activate
 export PACKER_LOG_PATH=packer-log.txt
 
-# use this a the version tag
-UNIXTIME=$(date +%s)
-
 PACKER_FILE=${2:-packer.json}
 
 VALIDATE="packer validate ${PACKER_FILE}"

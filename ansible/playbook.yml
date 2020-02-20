@@ -9,18 +9,20 @@
             state: present
         loop:
             - "python-apt"
-            - "firefox"
-            - "chromium-browser"
             - "evince"
             - "tree"
             - "baobab"
         become: yes
 
-      - name: Install Visual Studio Code
+      - name: Install Useful Desktop Snaps
         snap:
-            name: code
-            classic: yes
+            name: '{{ item.name }}'
+            classic: '{{ item.classic }}'
             state: present
+        with_items:
+        - { name: 'code', classic: 'yes' }
+        - { name: 'firefox', classic: 'no' }
+        - { name: 'chromium', classic: 'no' }
         become: yes
 
       - name: Download SDKMAN!

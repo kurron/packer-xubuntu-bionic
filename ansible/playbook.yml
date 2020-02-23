@@ -103,6 +103,7 @@
             - { name: 'install-kubectl.sh', command: 'sudo snap install kubectl --classic' }
             - { name: 'install-powershell.sh', command: 'sudo snap install powershell --classic' }
             - { name: 'install-ffmpeg.sh', command: 'sudo snap install ffmpeg' }
+            - { name: 'install-npm.sh', command: 'sudo snap install node --classic' }
             - { name: 'install-gradle.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install gradle' }
             - { name: 'install-groovy.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install groovy' }
             - { name: 'install-java.sh', command: 'echo try "sdk list java" to list available JDKs' }

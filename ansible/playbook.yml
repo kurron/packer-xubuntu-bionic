@@ -8,7 +8,7 @@
             name: "{{item}}"
             state: present
         loop:
-            - "python-apt"
+#           - "python-apt"
             - "evince"
             - "tree"
             - "baobab"
@@ -83,6 +83,7 @@
             create: yes
         become: no
         with_items:
+            - { name: 'install-aws-cli.sh', command: 'echo "alias aws='echo docker run --rm --interactive --tty --volume ~/.aws:/root/.aws --volume $(pwd):/aws amazon/aws-cli:latest'" > ~/.bash_aliases' }
             - { name: 'install-clion.sh', command: 'sudo snap install clion --classic' }
             - { name: 'install-data-grip.sh', command: 'sudo snap install datagrip --classic' }
             - { name: 'install-go-land.sh', command: 'sudo snap install goland --classic' }
@@ -112,7 +113,7 @@
             - { name: 'install-visual-vm.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install visualvm' }
 
   roles:
-      - kurron.aws
+#     - kurron.aws
       - kurron.docker-host
       - kurron.hashicorp
 

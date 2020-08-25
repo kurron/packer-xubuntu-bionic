@@ -111,6 +111,7 @@
             - { name: 'install-kotlin.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install kotlin' }
             - { name: 'install-maven.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install maven' }
             - { name: 'install-visual-vm.sh', command: 'source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install visualvm' }
+            - { name: 'install-node-js.sh', command: 'sudo snap install node --classic' }
 
   roles:
 #     - kurron.aws
